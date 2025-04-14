@@ -13,4 +13,6 @@
     <string name="password">password</string>
     <string name="login">LOGIN</string>
     <string name="logged_in">LOGGED IN</string>
+    <string name="preference_file_key">bnhepPreferenceFileNameGymLog</string>
+    <string name="preference_userid_key">bnhepPreferenceUserIdKeyGymLog</string>
 </resources>
