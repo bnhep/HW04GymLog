@@ -3,6 +3,8 @@ package com.example.hw04gymlog.database;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+
 import com.example.hw04gymlog.database.entities.GymLog;
 import com.example.hw04gymlog.MainActivity;
 import com.example.hw04gymlog.database.entities.User;
@@ -76,19 +78,11 @@ public class GymLogRepository {
         });
     }
 
-    public User getUserByUserName(String username) {
-        Future<User> future = GymLogDatabase.databaseWriteExecutor.submit(
-                new Callable<User>() {
-                    @Override
-                    public User call() throws Exception {
-                        return userDAO.getUserByUserName(username);
-                    }
-                });
-        try{
-            return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.i(MainActivity.TAG, "Problem when getting user by username");
-        }
-        return null;
+    public LiveData<User> getUserByUserName(String username) {
+        return userDAO.getUserByUserName(username);
+    }
+
+    public LiveData<User> getUserByUserId(int userId) {
+        return userDAO.getUserByUserId(userId);
     }
 }

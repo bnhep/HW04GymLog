@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -11,10 +12,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 
 
 import com.example.hw04gymlog.database.GymLogRepository;
@@ -23,20 +24,22 @@ import com.example.hw04gymlog.database.entities.User;
 import com.example.hw04gymlog.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "LOG_GYMLOG";
     private static final String MAIN_ACTIVITY_USER_ID = "com.example.hw04gymlog.MAIN_ACTIVITY_USER_ID";
+    static final String SHARED_PREFERENCE_USERID_KEY = "com.example.hw04gymlog.SHARED_PREFERENCE_USERID_KEY";
+    static final String SHARED_PREFERENCE_USERID_VALUE = "com.example.hw04gymlog.SHARED_PREFERENCE_USERID_VALUE";
+    private static final int LOGGED_OUT = -1;
     private ActivityMainBinding binding;
     private GymLogRepository repository;
 
     String exercise = "";
     double weight = 0.0;
     int reps = 0;
-    //TODO:ADDLOGININFORMATION
-    private int loggedInUserID = -1;
+
+    private int loggedInUserId = -1;
     private User user;
 
 
@@ -45,19 +48,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        repository = GymLogRepository.getRepository(getApplication());
         loginUser();
-        invalidateOptionsMenu();
 
-        if(loggedInUserID == -1){
+        if(loggedInUserId == -1){
             Intent intent = LoginActivity.loginIntentFactory(getApplicationContext());
             startActivity(intent);
         }
 
 
-
-
-        repository = GymLogRepository.getRepository(getApplication());
 
         binding.logDisplayTextView.setMovementMethod(new ScrollingMovementMethod());
         updateDisplay();
@@ -79,9 +78,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        //TODO MAKE LOGIN METHOD FUNCTIONAL
-        user = new User("Brandon", "password");
-        loggedInUserID = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, -1);
+        //check shared preference for logged in user
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_USERID_KEY,
+                Context.MODE_PRIVATE);
+        loggedInUserId = sharedPreferences.getInt(SHARED_PREFERENCE_USERID_VALUE, LOGGED_OUT);
+        if (loggedInUserId != LOGGED_OUT){
+            return;
+        }
+        //check intent for logged in user
+        loggedInUserId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, LOGGED_OUT);
+        if(loggedInUserId == LOGGED_OUT){
+            return;
+        }
+        LiveData<User> userObserver = repository.getUserByUserId(loggedInUserId);
+        userObserver.observe(this, user -> {
+            if (user != null) {
+                invalidateOptionsMenu();
+            }
+        });
     }
 
     @Override
@@ -95,6 +109,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.logoutMenuItem);
         item.setVisible(true);
+        if (user == null){
+            return false;
+        }
         item.setTitle(user.getUsername());
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -131,7 +148,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void logout() {
-        //TODO FINISH LOGOUT METHOD
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_USERID_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+        sharedPreferencesEditor.putInt(SHARED_PREFERENCE_USERID_KEY, LOGGED_OUT);
+        sharedPreferencesEditor.apply();
+
+        getIntent().putExtra(MAIN_ACTIVITY_USER_ID, LOGGED_OUT);
         startActivity(LoginActivity.loginIntentFactory(getApplicationContext()));
     }
 
@@ -139,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         if(exercise.isEmpty()){
             return;
         }
-        GymLog log = new GymLog(exercise, weight, reps, loggedInUserID);
+        GymLog log = new GymLog(exercise, weight, reps, loggedInUserId);
         repository.insertGymLog(log);
     }
     private void updateDisplay(){
