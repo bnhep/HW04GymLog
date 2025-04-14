@@ -49,12 +49,6 @@ public class LoginActivity extends AppCompatActivity {
             if (user != null) {
                 String password = binding.passwordLogInEditText.getText().toString();
                 if (password.equals(user.getPassword())) {
-                    SharedPreferences sharedPreferences = getApplicationContext()
-                            .getSharedPreferences(MainActivity.SHARED_PREFERENCE_USERID_KEY,
-                                    Context.MODE_PRIVATE);
-                    SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-                    sharedPreferencesEditor.putInt(MainActivity.SHARED_PREFERENCE_USERID_KEY, user.getId());
-                    sharedPreferencesEditor.apply();
                     startActivity(MainActivity.mainActivityIntentFactory(getApplicationContext(),
                             user.getId()));
                 } else {
