@@ -10,14 +10,17 @@
     <TextView
         android:id="@+id/titleLoginTextView"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
         android:layout_margin="16dip"
+        android:layout_marginTop="184dp"
         android:gravity="center"
         android:text="@string/welcome_to_the_gym_log_n_please_sign_in"
         android:textSize="42sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.213" />
 
     <EditText
         android:id="@+id/userNameLogInEditText"

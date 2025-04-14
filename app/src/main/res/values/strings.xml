@@ -12,4 +12,5 @@
     <string name="welcome_to_the_gym_log_n_please_sign_in">WELCOME TO THE GYM LOG\n PLEASE SIGN IN</string>
     <string name="password">password</string>
     <string name="login">LOGIN</string>
+    <string name="logged_in">LOGGED IN</string>
 </resources>

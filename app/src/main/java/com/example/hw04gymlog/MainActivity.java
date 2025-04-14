@@ -1,16 +1,25 @@
 package com.example.hw04gymlog;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.example.hw04gymlog.database.GymLogRepository;
 import com.example.hw04gymlog.database.entities.GymLog;
+import com.example.hw04gymlog.database.entities.User;
 import com.example.hw04gymlog.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -27,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
     double weight = 0.0;
     int reps = 0;
     //TODO:ADDLOGININFORMATION
-    int loggedInUserID = -1;
+    private int loggedInUserID = -1;
+    private User user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         loginUser();
+        invalidateOptionsMenu();
 
         if(loggedInUserID == -1){
             Intent intent = LoginActivity.loginIntentFactory(getApplicationContext());
@@ -67,7 +79,60 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
+        //TODO MAKE LOGIN METHOD FUNCTIONAL
+        user = new User("Brandon", "password");
         loggedInUserID = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, -1);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.logout_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.logoutMenuItem);
+        item.setVisible(true);
+        item.setTitle(user.getUsername());
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                showLogOutDialog();
+                return false;
+            }
+        });
+        return true;
+    }
+
+    private void showLogOutDialog(){
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+        final AlertDialog alertDialog = alertBuilder.create();
+
+        alertBuilder.setMessage("Do you want to logout?");
+
+        alertBuilder.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                logout();
+            }
+        });
+        alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertBuilder.create().show();
+    }
+
+
+
+    private void logout() {
+        //TODO FINISH LOGOUT METHOD
+        startActivity(LoginActivity.loginIntentFactory(getApplicationContext()));
     }
 
     private void insertGymLogRecord(){
