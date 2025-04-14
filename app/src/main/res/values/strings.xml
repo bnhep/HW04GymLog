@@ -8,4 +8,8 @@
     <string name="reps">Reps</string>
     <string name="log">Log!</string>
     <string name="nothing_to_show_time_to_hit_the_gym">Nothing to show, time to hit the gym</string>
+    <string name="username">Username</string>
+    <string name="welcome_to_the_gym_log_n_please_sign_in">WELCOME TO THE GYM LOG\n PLEASE SIGN IN</string>
+    <string name="password">password</string>
+    <string name="login">LOGIN</string>
 </resources>
