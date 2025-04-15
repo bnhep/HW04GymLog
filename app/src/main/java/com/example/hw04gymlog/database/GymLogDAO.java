@@ -19,4 +19,7 @@ public interface GymLogDAO {
     List<GymLog> getAllRecords();
     @Query("SELECT * FROM " + GymLogDatabase.GYM_LOG_TABLE + " WHERE userid = :loggedInUserId ORDER BY date DESC")
     List<GymLog> getRecordsByUserId(int loggedInUserId);
+
+    @Query("SELECT * FROM " + GymLogDatabase.GYM_LOG_TABLE + " WHERE userid = :loggedInUserId ORDER BY date DESC")
+    LiveData<List<GymLog>> getRecordsByUserIdLiveData(int loggedInUserId);
 }
