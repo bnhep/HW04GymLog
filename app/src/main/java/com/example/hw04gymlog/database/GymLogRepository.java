@@ -15,6 +15,13 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+/**
+ * Repository class for the database, functions to query the data without having to
+ * create dao objects in activities.
+ * HW04: GymLog
+ * Followed along with the videos
+ * Brandon Nhep
+ */
 public class GymLogRepository {
     private final GymLogDAO gymLogDAO;
     private final UserDAO userDAO;

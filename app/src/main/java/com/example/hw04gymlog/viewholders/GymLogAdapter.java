@@ -36,6 +36,7 @@ public class GymLogAdapter extends ListAdapter<GymLog, GymLogViewHolder> {
         public boolean areContentsTheSame(@NonNull GymLog oldItem, @NonNull GymLog newItem) {
             return oldItem.equals(newItem);
         }
+
     }
 
 }

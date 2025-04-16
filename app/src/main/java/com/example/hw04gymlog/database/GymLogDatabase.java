@@ -17,6 +17,14 @@ import com.example.hw04gymlog.database.typeConverters.LocalDateTypeConverter;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+
+/**
+ * Database class for the database, utilizes Room annotations.
+ * HW04: GymLog
+ * Followed along with the videos
+ * Brandon Nhep
+ */
 @TypeConverters(LocalDateTypeConverter.class)
 @Database(entities = {GymLog.class, User.class}, version = 1, exportSchema = false)
 public abstract class GymLogDatabase extends RoomDatabase {

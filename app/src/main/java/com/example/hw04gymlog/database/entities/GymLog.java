@@ -9,6 +9,12 @@ import com.example.hw04gymlog.database.GymLogDatabase;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Entity class for the database, utilizes Room annotations.
+ * HW04: GymLog
+ * Followed along with the videos
+ * Brandon Nhep
+ */
 @Entity(tableName = GymLogDatabase.GYM_LOG_TABLE)
 public class GymLog {
     @PrimaryKey(autoGenerate = true)

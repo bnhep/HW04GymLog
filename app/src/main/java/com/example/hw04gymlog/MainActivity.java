@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         gymLogViewModel = new ViewModelProvider(this).get(GymLogViewModel.class);
 
-
+        Log.d(TAG, "MainActivity onCreate");
         RecyclerView recyclerView = binding.logDisplayRecyclerView;
         final GymLogAdapter adapter = new GymLogAdapter(new GymLogAdapter.GymLogDiff());
         recyclerView.setAdapter(adapter);
@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 getInformationFromDisplay();
                 insertGymLogRecord();
+
             }
         });
 
@@ -189,6 +190,11 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferencesEditor.apply();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "MainActivity onResume");
+    }
     private void insertGymLogRecord(){
         if(exercise.isEmpty()){
             return;
